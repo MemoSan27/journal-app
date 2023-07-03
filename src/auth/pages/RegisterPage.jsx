@@ -2,11 +2,12 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Button, Grid, Link, TextField, Typography } from "@mui/material"
 import { AuthLayout } from '../layout/AuthLayout';
 import { useForm } from '../../hooks';
+import { useState } from 'react';
 
 const formData = {
-  email: 'memeo@gmail.com',
-  password: '123456',
-  displayName: 'Guillermo Sandoval',
+  email: '',
+  password: '',
+  displayName: '',
 
 }
 
@@ -18,6 +19,8 @@ const formValidations = {
 
 export const RegisterPage = () => {
 
+  const [formSubmitted, setFormSubmitted] = useState(false);
+
   const { 
         formState, displayName, email, password, onInputChange, 
         isFormValid, displayNameValid, emailValid, passwordValid, 
@@ -26,7 +29,9 @@ export const RegisterPage = () => {
 
   const onSubmit = (event) => {
     event.preventDefault();
+    setFormSubmitted(true);
     console.log(formState);
+    
   }
 
   return (
@@ -47,7 +52,7 @@ export const RegisterPage = () => {
                 name="displayName"
                 value={ displayName }
                 onChange={ onInputChange }
-                error={ !!displayNameValid }
+                error={ !!displayNameValid && formSubmitted }
                 helperText={ displayNameValid }
                 />
               </Grid>
@@ -61,7 +66,7 @@ export const RegisterPage = () => {
                 name="email"
                 value={ email }
                 onChange={ onInputChange }
-                error={ !!emailValid }
+                error={ !!emailValid && formSubmitted }
                 helperText={ emailValid }
                 />
               </Grid>
@@ -75,7 +80,7 @@ export const RegisterPage = () => {
                 name="password"
                 value={ password }
                 onChange={ onInputChange }
-                error={ !!passwordValid }
+                error={ !!passwordValid && formSubmitted  }
                 helperText={ passwordValid }
                 />
               </Grid>
