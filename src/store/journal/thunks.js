@@ -1,6 +1,6 @@
 import { collection, doc, setDoc } from "firebase/firestore/lite";
 import { FireBaseDB } from "../../firebase/config";
-import { addNewEmptyNote, creatingNewNote, noteUpdated, setActiveNote, setNotes, setSaving } from "./";
+import { addNewEmptyNote, creatingNewNote, noteUpdated, setActiveNote, setNotes, setPhotostoActiveNote, setSaving } from "./";
 import { fileUpload, loadNotes } from "../../helpers";
 
 
@@ -37,8 +37,7 @@ export const startLoadingNotes = ( ) => {
         const { uid } = getState().auth;
         if ( !uid ) throw new Error('El UID del usuario no existe');
 
-        console.log({uid});
-
+        
         const notes = await loadNotes( uid );
         dispatch( setNotes( notes ) );
 
@@ -71,6 +70,17 @@ export const startUploadingFiles = ( files = [] ) => {
         
         dispatch( setSaving() );
         
-        await fileUpload( files[0] );
+        //await fileUpload( files[0] );
+        const fileUploadPromises = [];
+
+        for (const file of files) {
+            fileUploadPromises.push( fileUpload( file ))
+            
+        }
+
+        const photosUrls = await Promise.all( fileUploadPromises );
+        
+        dispatch( setPhotostoActiveNote( photosUrls ) );
+
     } 
 }
